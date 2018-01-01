@@ -16,10 +16,10 @@ jobs:
             export USER=circleci
             export LANG=C
             bash install-nix.sh
-            source ~/.nix-profile/etc/profile.d/nix.sh
       - run:
           name: Build GHC
           command: |
+            source /home/circleci/.nix-profile/etc/profile.d/nix.sh
             set -e
             cd ghc
             nix-build '<nixpkgs>' -A haskell.compiler.ghcHEAD
