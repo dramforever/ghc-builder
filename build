@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -A haskell.compiler.ghcHEAD -i bash '<nixpkgs>'
+#! nix-shell -A haskell.compiler.ghcHEAD '<nixpkgs>'
 
 set -e
 
