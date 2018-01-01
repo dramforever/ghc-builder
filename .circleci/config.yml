@@ -21,5 +21,4 @@ jobs:
           command: |
             source /home/circleci/.nix-profile/etc/profile.d/nix.sh
             set -e
-            cd ghc
-            nix-build '<nixpkgs>' -A haskell.compiler.ghcHEAD
+            bash build.sh
