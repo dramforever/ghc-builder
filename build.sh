@@ -1,11 +1,9 @@
-#! /usr/bin/env nix-shell
-#! nix-shell -A haskell.compiler.ghcHEAD '<nixpkgs>'
-
 set -e
 
 export LANG=C
 
 cd ghc
+
 configurePhase
 patchPhase
 buildPhase

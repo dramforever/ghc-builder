@@ -9,6 +9,7 @@ jobs:
           name: Install Nix
           command: |
             set -e
+            export LANG=C
             sudo apt update
             sudo apt upgrade
             curl https://nixos.org/nix/install > install-nix.sh
@@ -16,9 +17,16 @@ jobs:
             export USER=circleci
             bash install-nix.sh
       - run:
+          name: Setup build environment
+          command: |
+            set -e
+            export LANG=C
+            source /home/circleci/.nix-profile/etc/profile.d/nix.sh
+            nix-shell '<nixpkgs>' -A haskell.compiler.ghcHEAD --run "echo OK"
+      - run:
           name: Build GHC
           command: |
-            source /home/circleci/.nix-profile/etc/profile.d/nix.sh
             set -e
-            chmod +x build
-            ./build
+            export LANG=C
+            source /home/circleci/.nix-profile/etc/profile.d/nix.sh
+            nix-shell '<nixpkgs>' -A haskell.compiler.ghcHEAD --run "bash build.sh"
