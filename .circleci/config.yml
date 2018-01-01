@@ -21,4 +21,5 @@ jobs:
           command: |
             source /home/circleci/.nix-profile/etc/profile.d/nix.sh
             set -e
-            bash build.sh
+            chmod +x build
+            ./build
