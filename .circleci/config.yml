@@ -13,4 +13,12 @@ jobs:
             sudo apt upgrade
             curl https://nixos.org/nix/install > install-nix.sh
             sha256sum -c <<<"1b64d89db0bf4d6ddb36a7a9fff4b19dd96b93a65af6b245563689aba4134b77  install-nix.sh"
+            export USER=circleci
+            export LANG=C
             bash install-nix.sh
+      - run:
+          name: Build GHC
+          command: |
+            set -e
+            cd ghc
+            nix-build '<nixpkgs>' -A haskell.compiler.ghcHEAD
