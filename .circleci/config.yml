@@ -15,12 +15,12 @@ jobs:
           command: |
             set -e
             export LANG=C
-            source /home/circleci/.nix-profile/etc/profile.d/nix.sh
+            source /home/vanilla/.nix-profile/etc/profile.d/nix.sh
             nix-shell --run "echo OK"
       - run:
           name: Build GHC
           command: |
             set -e
             export LANG=C
-            source /home/circleci/.nix-profile/etc/profile.d/nix.sh
+            source /home/vanilla/.nix-profile/etc/profile.d/nix.sh
             nix-build
