@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:9.2
+      - image: terrorjack/vanilla:circleci
     steps:
       - checkout
       - run:
@@ -11,27 +11,16 @@ jobs:
             git submodule sync --recursive
             git submodule update --recursive --init
       - run:
-          name: Install Nix
-          command: |
-            set -e
-            export LANG=C
-            sudo apt update
-            sudo apt upgrade
-            curl https://nixos.org/nix/install > install-nix.sh
-            sha256sum -c <<<"1b64d89db0bf4d6ddb36a7a9fff4b19dd96b93a65af6b245563689aba4134b77  install-nix.sh"
-            export USER=circleci
-            bash install-nix.sh
-      - run:
           name: Setup build environment
           command: |
             set -e
             export LANG=C
             source /home/circleci/.nix-profile/etc/profile.d/nix.sh
-            nix-shell '<nixpkgs>' -A haskell.compiler.ghcHEAD --run "echo OK"
+            nix-shell --run "echo OK"
       - run:
           name: Build GHC
           command: |
             set -e
             export LANG=C
             source /home/circleci/.nix-profile/etc/profile.d/nix.sh
-            nix-shell '<nixpkgs>' -A haskell.compiler.ghcHEAD --run "source build.sh"
+            nix-build
