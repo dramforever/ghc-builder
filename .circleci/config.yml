@@ -11,6 +11,14 @@ jobs:
                     git submodule sync --recursive
                     git submodule update --recursive --init
             - run:
+                name: export LANG=C
+                command: |
+                    echo 'export LANG=C' >> ~/.profile
+            - run:
+                name: Basic setup
+                command: |
+                    nix-env -i bash
+            - run:
                 name: Parse version
                 command: |
                     echo $(grep '^AC_INIT' ghc/configure.ac | cut -d[ -f3 | cut -d] -f1)$(date +'.%Y%m%d') > version.txt
@@ -18,14 +26,8 @@ jobs:
             - run:
                 name: Setup build environment
                 command: |
-                    set -e
-                    export LANG=C
-                    source /home/vanilla/.nix-profile/etc/profile.d/nix.sh
                     nix-shell --argstr version $(cat version.txt) --run "echo OK"
             - run:
                 name: Build GHC
                 command: |
-                    set -e
-                    export LANG=C
-                    source /home/vanilla/.nix-profile/etc/profile.d/nix.sh
                     nix-build --argstr version $(cat version.txt)
