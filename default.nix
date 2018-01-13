@@ -6,9 +6,9 @@ with nixpkgs;
 
 rec {
     ghc = (haskell.compiler.ghcHEAD.override (oldAttrs: {
+        inherit version;
         selfPkgs = packages;
     })).overrideAttrs (oldAttrs: {
-        inherit version;
         src = ./ghc;
         makeFlags = [ "-j4" ];
     });
