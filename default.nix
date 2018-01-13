@@ -10,6 +10,7 @@ rec {
     })).overrideAttrs (oldAttrs: {
         inherit version;
         src = ./ghc;
+        makeFlags = [ "-j4" ];
     });
 
     packages = haskell.packages.ghcHEAD.override (oldAttrs: {
