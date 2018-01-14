@@ -30,12 +30,12 @@ jobs:
             - run:
                 name: Build GHC
                 command: |
-                    nix-build --argstr version $(cat version.txt)
+                    nix-build --argstr version $(cat version.txt) -A all
             - run:
                 name: Dump artifact
                 command: |
                     mkdir artifacts
-                    nix-store --export $(nix-store -qR $(readlink result)) > artifacts/dump.nar
+                    nix-store --export $(nix-store -qR result*) > artifacts/dump.nar
             - store_artifacts:
                 path: ./artifacts
 
