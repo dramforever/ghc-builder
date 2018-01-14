@@ -10,6 +10,7 @@ rec {
         selfPkgs = packages;
     })).overrideAttrs (oldAttrs: {
         src = ./ghc;
+        makeFlags = [ "-j2" ];
     });
 
     packages = haskell.packages.ghcHEAD.override (oldAttrs: {
