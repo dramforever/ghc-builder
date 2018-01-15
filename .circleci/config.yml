@@ -38,7 +38,7 @@ jobs:
                     VER_PREFIX=$(grep '^AC_INIT' ghc/configure.ac | cut -d[ -f3 | cut -d] -f1)
                     REV=$(cat revision.txt)
                     VER_SUFFIX=${REV:0:6}
-                    echo  > version.txt
+                    echo VER_PREFIX.VER_SUFFIX > version.txt
                     echo Building GHC as version: $(cat version.txt)
             - run:
                 name: Setup build environment
