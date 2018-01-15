@@ -6,10 +6,20 @@ jobs:
         steps:
             - checkout
             - run:
-                name: Clone submodules
+                name: Get GHC source
                 command: |
-                    git submodule sync --recursive
-                    git submodule update --recursive --init
+                    git clone --recursive git://git.haskell.org/ghc.git
+                    cd ghc
+                    git checkout $(cat revision.txt) --
+                    cd ..
+            - run:
+                name: Parse version
+                command: |
+                    VER_PREFIX=$(grep '^AC_INIT' ghc/configure.ac | cut -d[ -f3 | cut -d] -f1)
+                    REV=$(cat revision.txt)
+                    VER_SUFFIX=${REV:0:6}
+                    echo ${VER_PREFIX}.${VER_SUFFIX} > version.txt
+                    echo Building GHC as version: $(cat version.txt)
             - run:
                 name: Install Nix
                 command: |
@@ -17,7 +27,6 @@ jobs:
                     export USER=`whoami`
 
                     curl https://nixos.org/nix/install > install-nix.sh
-                    sha256sum -c <<<"1b64d89db0bf4d6ddb36a7a9fff4b19dd96b93a65af6b245563689aba4134b77  install-nix.sh"
                     bash install-nix.sh
 
                     echo 'export LANG=C' >> ~/env.sh
@@ -26,26 +35,16 @@ jobs:
                     echo "export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> ~/env.sh
                     echo "source ~/.nix-profile/etc/profile.d/nix.sh" >> ~/env.sh
             - run:
-                name: Basic setup
-                command: |
-                    source ~/env.sh
-                    nix-env -i bash
-            - run:
-                name: Parse version
-                command: |
-                    source ~/env.sh
-                    echo $(grep '^AC_INIT' ghc/configure.ac | cut -d[ -f3 | cut -d] -f1)$(date +'.%Y%m%d') > version.txt
-                    echo Building GHC as version: $(cat version.txt)
-            - run:
                 name: Setup build environment
                 command: |
                     source ~/env.sh
-                    nix-shell --argstr version $(cat version.txt) --run "echo OK"
+                    nix-env -i bash
+                    nix-shell --run "echo OK"
             - run:
                 name: Build GHC
                 command: |
                     source ~/env.sh
-                    nix-build --argstr version $(cat version.txt) -A ghc.all
+                    nix-build -A ghc.all
             - run:
                 name: Dump artifact
                 command: |

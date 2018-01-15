@@ -1,15 +1,24 @@
-{ version
-, nixpkgs ? import <nixpkgs> {}
+{ nixpkgs ? import <nixpkgs> {}
 }:
 
 with nixpkgs;
 
-rec {
+let
+    getFile = path:
+        builtins.replaceStrings ["\n"] [""] (builtins.readFile path);
+
+    revision = getFile ./revision.txt;
+    version = getFile ./version.txt;
+
+in rec {
     ghc = (haskell.compiler.ghcHEAD.override (oldAttrs: {
         inherit version;
         selfPkgs = packages;
     })).overrideAttrs (oldAttrs: {
-        src = ./ghc;
+        src = fetchgit {
+            url = "./ghc";
+            rev = revision;
+        };
         makeFlags = [ "-j2" ];
     });
 
