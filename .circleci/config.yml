@@ -20,11 +20,11 @@ jobs:
                     sha256sum -c <<<"1b64d89db0bf4d6ddb36a7a9fff4b19dd96b93a65af6b245563689aba4134b77  install-nix.sh"
                     bash install-nix.sh
 
-                    echo 'export LANG=C' >> ~/.profile
-                    echo 'export USER=`whoami`' >> ~/.profile
-                    echo "unset NIX_PATH" >> ~/.profile
-                    echo "export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> ~/.profile
-                    echo "source ~/.nix-profile/etc/profile.d/nix.sh" >> ~/.profile
+                    echo 'export LANG=C' >> ~/.bash_profile
+                    echo 'export USER=`whoami`' >> ~/.bash_profile
+                    echo "unset NIX_PATH" >> ~/.bash_profile
+                    echo "export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> ~/.bash_profile
+                    echo "source ~/.nix-profile/etc/profile.d/nix.sh" >> ~/.bash_profile
             - run:
                 name: Basic setup
                 command: |
