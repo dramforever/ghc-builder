@@ -13,8 +13,9 @@ jobs:
             - run:
                 name: Install Nix
                 command: |
-                    set -e
                     export LANG=C
+                    export USER=`whoami`
+
                     curl https://nixos.org/nix/install > install-nix.sh
                     sha256sum -c <<<"1b64d89db0bf4d6ddb36a7a9fff4b19dd96b93a65af6b245563689aba4134b77  install-nix.sh"
                     bash install-nix.sh
