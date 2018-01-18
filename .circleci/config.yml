@@ -11,6 +11,7 @@ jobs:
                     git clone --recursive git://git.haskell.org/ghc.git
                     cd ghc
                     git checkout $(cat revision.txt) --
+                    rm -rf .git
                     cd ..
             - run:
                 name: Install Nix
@@ -44,12 +45,12 @@ jobs:
                 name: Setup build environment
                 command: |
                     source ~/env.sh
-                    nix-shell --argstr version $(cat version.txt) --run "echo OK"
+                    nix-shell --run "echo OK"
             - run:
                 name: Build GHC
                 command: |
                     source ~/env.sh
-                    nix-build --argstr version $(cat version.txt) -A ghc.all
+                    nix-build -A ghc.all
             - run:
                 name: Dump artifact
                 command: |
@@ -59,5 +60,6 @@ jobs:
                     mkdir artifacts
                     tar -cJf artifacts/cache.tar.xz dump/
             - store_artifacts:
-                path: ./artifacts
+                path: dump/
+                destination: dump
 
