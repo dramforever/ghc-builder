@@ -10,7 +10,7 @@ jobs:
                 command: |
                     git clone --recursive git://git.haskell.org/ghc.git
                     cd ghc
-                    git checkout $(cat revision.txt) --
+                    git checkout $(cat ../revision.txt) --
                     rm -rf .git
                     cd ..
             - run:
