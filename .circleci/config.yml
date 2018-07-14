@@ -37,9 +37,7 @@ jobs:
                 command: |
                     source ~/env.sh
                     VER_PREFIX=$(grep '^AC_INIT' ghc/configure.ac | cut -d[ -f3 | cut -d] -f1)
-                    REV=$(cat revision.txt)
-                    VER_SUFFIX=${REV:0:6}
-                    echo ${VER_PREFIX}.${VER_SUFFIX} > version.txt
+                    echo ${VER_PREFIX}.$(date +"%Y%m%d") > version.txt
                     echo Building GHC as version: $(cat version.txt)
             - run:
                 name: Setup build environment
@@ -55,10 +53,8 @@ jobs:
                 name: Dump artifact
                 command: |
                     source ~/env.sh
-                    mkdir dump
-                    nix-push --dest dump result result-doc
-                    mkdir artifacts
-                    tar -cJf artifacts/cache.tar.xz dump/
+                    mkdir /tmp/dump
+                    nix copy --to file:///tmp/dump/ result result-doc
             - store_artifacts:
                 path: dump/
                 destination: dump
