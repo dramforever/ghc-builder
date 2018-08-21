@@ -19,7 +19,7 @@ jobs:
       - run:
           name: Build GHC
           command: |
-            nix-build -A ghc-custom.all
+            nix-build --cores 2 -A ghc-custom.all
       - run:
           name: Dump binary cache
           command: |
