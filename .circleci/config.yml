@@ -6,22 +6,22 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Get source
-        command: |
-          git clone --recursive git://git.haskell.org/ghc.git
-          cd ghc
-          git checkout $(cat ../rev.txt)
-          cd ..
+          name: Get source
+          command: |
+            git clone --recursive git://git.haskell.org/ghc.git
+            cd ghc
+            git checkout $(cat ../rev.txt)
+            cd ..
       - run:
-        name: Build GHC
-        command: |
-          nix-build -A ghc-custom.all
+          name: Build GHC
+          command: |
+            nix-build -A ghc-custom.all
       - run:
-        name: Dump binary cache
-        command: |
-          mkdir cache
-          nix copy --to file://cache/ result result-doc
+          name: Dump binary cache
+          command: |
+            mkdir cache
+            nix copy --to file://cache/ result result-doc
       - store_artifacts:
-        path: cache
-        destination: cache
+          path: cache
+          destination: cache
 
