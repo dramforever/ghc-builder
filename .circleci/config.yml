@@ -25,9 +25,9 @@ jobs:
             echo "binary-caches = file://${PWD}/binary-cache https://cache.nixos.org" >> /etc/nix/nix.conf
             drv=$(nix-instantiate)
             nix-store --include-outputs -qR $drv | grep -v $drv > deps.txt
-            nix-store --realise $(cat deps.txt)
+            nix-store --realise $(cat deps.txt) >> bin-deps.txt
             mkdir -p binary-cache
-            nix copy --to file://binary-cache $(cat deps.txt)
+            nix copy --to file://binary-cache $(cat bin-deps.txt)
       - save_cache:
           key: nix-binary-cache-{{ epoch }}
           paths:
