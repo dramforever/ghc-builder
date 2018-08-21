@@ -6,6 +6,10 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Setup
+          command: |
+            nix-channel --update
+      - run:
           name: Get source
           command: |
             git clone --recursive git://git.haskell.org/ghc.git
