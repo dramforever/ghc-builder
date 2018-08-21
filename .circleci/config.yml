@@ -23,7 +23,8 @@ jobs:
           name: Install dependencies
           command: |
             echo "binary-caches = file://${PWD}/binary-cache https://cache.nixos.org" >> /etc/nix/nix.conf
-            nix-store --include-outputs -qR $(nix-instantiate) > deps.txt
+            drv=$(nix-instantiate)
+            nix-store --include-outputs -qR $drv | grep -v $drv > deps.txt
             nix-store --realise $(cat deps.txt)
             mkdir -p binary-cache
             nix copy --to file://binary-cache $(cat deps.txt)
