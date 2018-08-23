@@ -21,6 +21,7 @@ jobs:
             cd ghc
             git fetch origin
             git checkout $(cat ../rev.txt)
+            git submodule update --init
             cd ..
 
       - save_cache:
