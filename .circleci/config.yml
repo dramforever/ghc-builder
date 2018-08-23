@@ -18,20 +18,19 @@ jobs:
             cd ..
       - restore_cache:
           keys:
-            - nix-binary-cache-
+            - v2-nix-store-dump-
       - run:
           name: Install dependencies
           command: |
-            echo "binary-caches = file://${PWD}/binary-cache https://cache.nixos.org" >> /etc/nix/nix.conf
+            [[ -f store-dump ]] && nix-store --import < store-dump
             drv=$(nix-instantiate)
-            nix-store --include-outputs -qR $drv | grep -v $drv > deps.txt
-            nix-store --realise $(cat deps.txt) >> bin-deps.txt
-            mkdir -p binary-cache
-            nix copy --to file://binary-cache $(cat bin-deps.txt)
+            nix-store -qR $drv | grep '.drv$' | grep -v $drv > deps.txt
+            nix-store --realise $(cat deps.txt) > bin-deps.txt
+            nix-store --export $(nix-store -qR $(cat bin-deps.txt)) > store-dump
       - save_cache:
-          key: nix-binary-cache-{{ epoch }}
+          key: v2-nix-store-dump-{{ epoch }}
           paths:
-            - binary-cache
+            - store-dump
       - run:
           name: Build GHC
           command: |
