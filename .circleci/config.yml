@@ -12,31 +12,13 @@ jobs:
 
       - restore_cache:
           keys:
-            - v3-ghc-source-
-
-      - run:
-          name: Get source
-          command: |
-            [[ -d ghc ]] || git clone --recursive git://git.haskell.org/ghc.git
-            cd ghc
-            git fetch origin
-            git checkout $(cat ../rev.txt)
-            git submodule update --init
-            cd ..
-
-      - save_cache:
-          key: v3-ghc-source-{{ checksum "rev.txt" }}
-          paths:
-            - ghc
-
-      - restore_cache:
-          keys:
             - v2-nix-store-dump-
       - run:
-          name: Install dependencies
+          name: Prepare build
           command: |
             [[ -f store-dump ]] && nix-store --import < store-dump
             drv=$(nix-instantiate)
+            echo Building $drv
             nix-store -qR $drv | grep '.drv$' | grep -v $drv > deps.txt
             nix-store --realise $(cat deps.txt) > bin-deps.txt
             nix-store --export $(nix-store -qR $(cat bin-deps.txt)) > store-dump

@@ -84,9 +84,14 @@ stdenv.mkDerivation rec {
 
   name = "${targetPrefix}ghc-${version}";
 
-  src = builtins.filterSource (path: type: baseNameOf path != ".git") ./ghc;
+  src = fetchgit {
+    url = "https://git.haskell.org/ghc.git";
+    rev = "9c4e6c6b1affd410604f8f76ecf56abfcc5cccb6";
+    sha256 = "1w6vkx435nh5j98sbh81dhi1vbfi4y28l4y32hqpkkqr8wmin86j";
+    fetchSubmodules = true;
+  };
 
-  rev = lib.commitIdFromGitRepo ./ghc/.git;
+  inherit (src) rev;
 
   enableParallelBuilding = true;
 
