@@ -18,12 +18,12 @@ jobs:
           name: Prepare build
           command: |
             mkdir -p store-dump
-            find store-dump/ | xargs -I name -- bash -c 'nix-store --import < name'
+            find store-dump/ | tail -n +2 | xargs -I name -- sh -c 'nix-store --import < name'
             drv=$(nix-instantiate)
             echo Building $drv
             nix-store -qR $drv | grep '.drv$' | grep -v $drv > deps.txt
             nix-store --realise $(cat deps.txt) > bin-deps.txt
-            sed -e 's|/nix/store/||' bin-deps.txt | xargs -I name -- bash -c 'nix-store --export name > store-dump/name'
+            sed -e 's|/nix/store/||' bin-deps.txt | xargs -I name -- sh -c 'nix-store --export name > store-dump/name'
       - save_cache:
           key: v3-nix-store-dump-{{ epoch }}
           paths:
