@@ -9,6 +9,7 @@ jobs:
           name: Setup
           command: |
             nix-channel --update
+            nix-env -iA nixos.bash
 
       - restore_cache:
           keys:
