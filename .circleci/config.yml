@@ -5,11 +5,6 @@ jobs:
       - image: terrorjack/vanilla:circleci
     steps:
       - checkout
-      - run:
-          name: Setup
-          command: |
-            nix-channel --update
-
       - restore_cache:
           keys:
             - v3-nix-store-dump-
