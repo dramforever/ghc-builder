@@ -11,6 +11,7 @@ jobs:
       - run:
           name: Prepare build
           command: |
+            nix-env -iA nixpkgs.xz
             mkdir -p store-dump
             find store-dump/ | tail -n +2 | xargs -I name -- sh -c 'nix-store --import < name'
             drv=$(nix-instantiate)
