@@ -10,6 +10,7 @@ jobs:
           name: Build GHC
           no_output_timeout: 1h
           command: |
+            nix-env -iA nixpkgs.xz
             nix-build --cores 2 -A ghc-custom.all > output.txt
 
       - run:
