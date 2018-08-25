@@ -18,7 +18,7 @@ jobs:
             echo Building $drv
             nix-store --query --references $drv > deps.txt
             nix-store --realise $(cat deps.txt) > bin-deps.txt
-            nix-store --export $(cat bin-deps.txt) > store-dump
+            nix-store --export $(nix-store -qR $(cat bin-deps.txt)) > store-dump
 
       - save_cache:
           key: v4-nix-store-dump-{{ epoch }}
