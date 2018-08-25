@@ -29,7 +29,7 @@ jobs:
           command: |
             nix-build --cores 2 -A ghc-custom.all > output.txt
 
-      - run
+      - run:
           name: Upload to cachix
           command: |
             cachix push $CACHIX_NAME < output.txt
