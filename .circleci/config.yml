@@ -27,13 +27,9 @@ jobs:
       - run:
           name: Build GHC
           command: |
-            nix-build --cores 2 -A ghc-custom.all
-      - run:
-          name: Dump artifacts
-          command: |
-            mkdir dist-cache
-            nix copy --to file://dist-cache/ $(readlink result) $(readlink result-doc)
+            nix-build --cores 2 -A ghc-custom.all > output.txt
 
-      - store_artifacts:
-          path: dist-cache
-          destination: dist-cache
+      - run
+          name: Upload to cachix
+          command: |
+            cachix push $CACHIX_NAME < output.txt
