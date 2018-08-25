@@ -5,22 +5,23 @@ jobs:
       - image: terrorjack/vanilla:circleci
     steps:
       - checkout
+
       - restore_cache:
           keys:
-            - v3-nix-store-dump-
+            - v4-nix-store-dump-
       - run:
           name: Prepare build
           command: |
             nix-env -iA nixpkgs.xz
-            mkdir -p store-dump
-            find store-dump/ | tail -n +2 | xargs -I name -- sh -c 'nix-store --import < name'
+            [[ -f store-dump ]] && nix-store --import < store-dump
             drv=$(nix-instantiate)
             echo Building $drv
-            nix-store -qR $drv | grep '.drv$' | grep -v $drv > deps.txt
+            nix-store --query --references $drv > deps.txt
             nix-store --realise $(cat deps.txt) > bin-deps.txt
-            sed -e 's|/nix/store/||' bin-deps.txt | xargs -I name -- sh -c 'nix-store --export /nix/store/name > store-dump/name'
+            nix-store --export $(cat bin-deps.txt) > store-dump
+
       - save_cache:
-          key: v3-nix-store-dump-{{ epoch }}
+          key: v4-nix-store-dump-{{ epoch }}
           paths:
             - store-dump
       - run:
@@ -32,6 +33,7 @@ jobs:
           command: |
             mkdir dist-cache
             nix copy --to file://dist-cache/ $(readlink result) $(readlink result-doc)
+
       - store_artifacts:
           path: dist-cache
           destination: dist-cache
