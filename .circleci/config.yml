@@ -18,7 +18,7 @@ jobs:
             echo Building $drv
             nix-store -qR $drv | grep '.drv$' | grep -v $drv > deps.txt
             nix-store --realise $(cat deps.txt) > bin-deps.txt
-            sed -e 's|/nix/store/||' bin-deps.txt | xargs -I name -- sh -c 'nix-store --export name > store-dump/name'
+            sed -e 's|/nix/store/||' bin-deps.txt | xargs -I name -- sh -c 'nix-store --export /nix/store/name > store-dump/name'
       - save_cache:
           key: v3-nix-store-dump-{{ epoch }}
           paths:
