@@ -6,25 +6,6 @@ jobs:
     steps:
       - checkout
 
-      - restore_cache:
-          keys:
-            - v4-nix-store-dump-
-      - run:
-          name: Prepare build
-          no_output_timeout: 30m
-          command: |
-            nix-env -iA nixpkgs.xz
-            [[ -f store-dump ]] && nix-store --import < store-dump
-            drv=$(nix-instantiate)
-            echo Building $drv
-            nix-store --query --references $drv > deps.txt
-            nix-store --realise $(cat deps.txt) > bin-deps.txt
-            nix-store --export $(nix-store -qR $(cat bin-deps.txt)) > store-dump
-
-      - save_cache:
-          key: v4-nix-store-dump-{{ epoch }}
-          paths:
-            - store-dump
       - run:
           name: Build GHC
           no_output_timeout: 1h
